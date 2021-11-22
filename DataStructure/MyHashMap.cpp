@@ -1,28 +1,30 @@
 #include "MyHashMap.h"
 MyHashMap::MyHashMap(size_t n)
 {
-	data = std::vector<int>(n, -1);
+	data.resize(n);
 }
-
 void MyHashMap::insert(uint value)
 {
 	int n = data.size();
-	data[value % n] = value;
+	data[value % n].push_back(value);
 	std::cout << value << "을(를) 삽입했습니다." << std::endl;
 }
 
 bool MyHashMap::find(uint value)
 {
 	int n = data.size();
-	return (data[value % n] == value);
+	auto& entries = data[value % n];
+	return std::find(entries.begin(), entries.end(), value) != entries.end();
 }
 
 void MyHashMap::erase(uint value)
 {
 	int n = data.size();
-	if (data[value % n] == value)
+	auto& entries = data[value % n];
+	auto iter = std::find(entries.begin(), entries.end(), value);
+	if (iter != entries.end())
 	{
-		data[value % n] = -1;
+		entries.erase(iter);
 		std::cout << value << "을(를) 삭제했습니다." << std::endl;
 	}
 }
